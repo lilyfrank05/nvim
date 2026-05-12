@@ -11,12 +11,15 @@ return {
     "hrsh7th/nvim-cmp",
   },
   opts = {
-    provider = "openai",
-    openai = {
-      endpoint = "https://openrouter.ai/api/v1",
-      model = "deepseek/deepseek-v4-flash",
-      api_key_name = "OPENROUTER_API_KEY",
-      max_tokens = 8192,
+    provider = "openrouter",
+    providers = {
+      openrouter = {
+        __inherited_from = "openai",
+        endpoint = "https://openrouter.ai/api/v1",
+        model = "deepseek/deepseek-v4-flash",
+        api_key_name = "OPENROUTER_API_KEY",
+        max_tokens = 8192,
+      },
     },
   },
 }
