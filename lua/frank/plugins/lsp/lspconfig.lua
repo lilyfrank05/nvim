@@ -8,29 +8,11 @@ return {
 		"williamboman/mason-lspconfig.nvim",
 	},
 	config = function()
-		local lspconfig = require("lspconfig")
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
-		local mason_lspconfig = require("mason-lspconfig")
-
 		local capabilities = cmp_nvim_lsp.default_capabilities()
 
-		mason_lspconfig.setup({
-			ensure_installed = {
-				"ts_ls",
-				"html",
-				"cssls",
-				"tailwindcss",
-				"svelte",
-				"lua_ls",
-				"graphql",
-				"emmet_ls",
-				"prismals",
-				"pyright",
-			},
-		})
-
-		-- Default servers
-		local servers = {
+		-- Default servers (capabilities only, mason-lspconfig auto-enables via vim.lsp.enable())
+		local default_servers = {
 			"ts_ls",
 			"html",
 			"cssls",
@@ -39,15 +21,12 @@ return {
 			"pyright",
 		}
 
-		for _, server in ipairs(servers) do
-			lspconfig[server].setup({
-				capabilities = capabilities,
-			})
+		for _, server in ipairs(default_servers) do
+			vim.lsp.config(server, { capabilities = capabilities })
 		end
 
 		-- Custom configurations
-
-		lspconfig["svelte"].setup({
+		vim.lsp.config("svelte", {
 			capabilities = capabilities,
 			on_attach = function(client, bufnr)
 				vim.api.nvim_create_autocmd("BufWritePost", {
@@ -59,12 +38,12 @@ return {
 			end,
 		})
 
-		lspconfig["graphql"].setup({
+		vim.lsp.config("graphql", {
 			capabilities = capabilities,
 			filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
 		})
 
-		lspconfig["emmet_ls"].setup({
+		vim.lsp.config("emmet_ls", {
 			capabilities = capabilities,
 			filetypes = {
 				"html",
@@ -78,7 +57,7 @@ return {
 			},
 		})
 
-		lspconfig["lua_ls"].setup({
+		vim.lsp.config("lua_ls", {
 			capabilities = capabilities,
 			settings = {
 				Lua = {
@@ -88,19 +67,17 @@ return {
 			},
 		})
 
-		-- Diagnostic sign icons (new way)
 		vim.diagnostic.config({
 			signs = {
 				text = {
-					[vim.diagnostic.severity.ERROR] = "",
-					[vim.diagnostic.severity.WARN] = "",
+					[vim.diagnostic.severity.ERROR] = "",
+					[vim.diagnostic.severity.WARN] = "",
 					[vim.diagnostic.severity.HINT] = "󰠠",
-					[vim.diagnostic.severity.INFO] = "",
+					[vim.diagnostic.severity.INFO] = "",
 				},
 			},
 		})
 
-		-- Key mappings
 		local keymap = vim.keymap
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
