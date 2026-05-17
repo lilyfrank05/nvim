@@ -1,4 +1,10 @@
-vim.cmd("let g:netrw_liststyle = 3")
+-- disable netrw so nvim-tree can take over file exploration
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- nvim 0.12 removed the FileExplorer augroup; pre-create it so nvim-tree
+-- can clear it without triggering E216
+vim.api.nvim_create_augroup("FileExplorer", { clear = false })
 
 local opt = vim.opt
 
